@@ -49,18 +49,33 @@ bleConnect.on("discover", function(peripheral) {
             console.log("ANTIDOS");
             c.write(new Buffer(bytes), false, function() {
               console.log("Wrote anti dos!");
-              characteristics.forEach(function(c) {
-                if (c.uuid === WakeMainProcessor) {
+              characteristics.forEach(function(d) {
+                if (d.uuid === WakeMainProcessor) {
                   console.log("WAKE MAIN PROCESSOR");
-                  c.write(new Buffer(1), false, function() {
+                  d.write(new Buffer(1), false, function() {
                     console.log("Wrote wake processor");
-                    characteristics.forEach(function(c) {
-                      // This isn't working.
-                      if (c.uuid === Roll) {
-                        var packet = setRGB(0xFF0000);
-                        console.log("Packet: "+packet);
-                        c.write(packet, false, function() {
-                          console.log("Color should be red now!");
+                    characteristics.forEach(function(e) {
+                      if (e.uuid === TXPower) {
+                        console.log("Setting TX Power");
+                        e.write(new Buffer(7), function(f) {
+                          console.log("TX Power Set");
+                          // This isn't working.
+                          if (f.uuid === Roll) {
+                            console.log("This should be a roll");
+                            var packet = setRGB(0xFF0000);
+                            var rollPacket = roll(60, 0, 1);
+                            var stopPacket = roll(0, 0, 1);
+                            console.log("Packet: "+packet);
+                            f.write(packet, false, function() {
+                              console.log("Color should be red now!");
+                              f.write(rollPacket, false, function() {
+                                console.log("should be rolling");
+                                //c.write(stopPacket, false, function() {
+                                //  console.log("Should be stopped");
+                                //}); 
+                              });
+                            });
+                          }
                         });
                       }
                     });
@@ -168,6 +183,16 @@ var createPacket = function(did, cid, options) {
   _packet.CID = cid;
  
   return _packet;
+};
+
+var roll = function(speed, heading, state, options) {
+  var packet = createPacket(0x30, options);
+  packet.DATA = new Buffer(4);
+  packet.DATA.writeUInt8(speed, 0);
+  packet.DATA.writeUInt16BE(heading, 1);
+  packet.DATA.writeUInt8(state, 3);
+  var result = packetBuilder(packet);
+  return result;
 };
 
 
