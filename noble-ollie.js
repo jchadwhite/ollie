@@ -50,32 +50,34 @@ bleConnect.on("discover", function(peripheral) {
             c.write(new Buffer(bytes), false, function() {
               console.log("Wrote anti dos!");
               characteristics.forEach(function(d) {
-                if (d.uuid === WakeMainProcessor) {
-                  console.log("WAKE MAIN PROCESSOR");
-                  d.write(new Buffer(1), false, function() {
-                    console.log("Wrote wake processor");
+                if (d.uuid === TXPower) {
+                  console.log("Setting TX Power");
+                  d.write(new Buffer(7), false, function() {
+                    console.log("TX Power Set");
                     characteristics.forEach(function(e) {
-                      if (e.uuid === TXPower) {
-                        console.log("Setting TX Power");
-                        e.write(new Buffer(7), function(f) {
-                          console.log("TX Power Set");
-                          // This isn't working.
-                          if (f.uuid === Roll) {
-                            console.log("This should be a roll");
-                            var packet = setRGB(0xFF0000);
-                            var rollPacket = roll(60, 0, 1);
-                            var stopPacket = roll(0, 0, 1);
-                            console.log("Packet: "+packet);
-                            f.write(packet, false, function() {
-                              console.log("Color should be red now!");
-                              f.write(rollPacket, false, function() {
-                                console.log("should be rolling");
-                                //c.write(stopPacket, false, function() {
-                                //  console.log("Should be stopped");
-                                //}); 
+                      if (e.uuid === WakeMainProcessor) {
+                        console.log("WAKE MAIN PROCESSOR");
+                        e.write(new Buffer(1), false, function() {
+                          console.log("Wrote wake processor");
+                          characteristics.forEach(function(f) {
+                            // This isn't working.
+                            if (f.uuid === Roll) {
+                              console.log("This should be a roll");
+                              var packet = setRGB(0xFF0000);
+                              var rollPacket = roll(60, 0, 1);
+                              var stopPacket = roll(0, 0, 1);
+                              console.log("Packet: "+packet);
+                              f.write(packet, false, function() {
+                                console.log("Color should be red now!");
+                                f.write(rollPacket, false, function() {
+                                  console.log("should be rolling");
+                                  //c.write(stopPacket, false, function() {
+                                  //  console.log("Should be stopped");
+                                  //}); 
+                                });
                               });
-                            });
-                          }
+                            }
+                          });
                         });
                       }
                     });
