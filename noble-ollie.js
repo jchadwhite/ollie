@@ -1,6 +1,6 @@
 
 
-var uuid = 'efbdbb95ed5c';
+var uuid = 'f45ca1058664';
 
   var OllieBLEService = "22bb746f2bb075542d6f726568705327",
     WakeMainProcessor = "22bb746f2bbf75542d6f726568705327",
@@ -42,7 +42,7 @@ bleConnect.on("discover", function(peripheral) {
     peripheral.connect(function() {
       peripheral.discoverAllServicesAndCharacteristics(function(error, services, characteristics) {
         services.forEach(function(s) {
-          console.log(s.uuid);
+          console.log("Service: "+s.uuid);
         });
         characteristics.forEach(function(c) {
           if (c.uuid === AntiDos) {
@@ -71,9 +71,9 @@ bleConnect.on("discover", function(peripheral) {
                                 console.log("Color should be red now!");
                                 f.write(rollPacket, false, function() {
                                   console.log("should be rolling");
-                                  //c.write(stopPacket, false, function() {
-                                  //  console.log("Should be stopped");
-                                  //}); 
+                                  c.write(stopPacket, false, function() {
+                                    console.log("Should be stopped");
+                                  }); 
                                 });
                               });
                             }
@@ -171,8 +171,6 @@ var calculateChecksum = function(aBuffer) {
   calculatedChecksum = calculatedChecksum & 0xFF ^ 0xFF; 
   return calculatedChecksum; 
 };
-
-
 
 var createPacket = function(did, cid, options) {
   var _packet = {}; 

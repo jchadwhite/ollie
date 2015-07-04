@@ -1,6 +1,6 @@
 var Cylon = require('cylon');
 
-var uuid = 'efbdbb95ed5c';
+var uuid = 'f45ca1058664';
 
 Cylon.config({
   logging: {
@@ -23,16 +23,10 @@ Cylon.robot({
    
 //        my.ollie.roll(60, 0, 1);
       after(1000, function() {
+        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
         console.log("Setting to #AAA");
-        my.ollie.setRGB(0xAAAAAA);
-        after(1000, function() {
-          console.log("Setting to #000");
-          my.ollie.setRGB(0x000000);
-          after(1000, function() {
-            console.log("Setting to #F00");
-            my.ollie.setRGB(0xFF0000);
-          });
-        });
+        my.ollie.setRGB(0xFF6600);
+        console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
       });
 //      after(1000, function(){
 //        my.ollie.stop();
